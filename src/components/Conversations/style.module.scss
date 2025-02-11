@@ -1,0 +1,145 @@
+.Conversations_container {
+  position: fixed;
+  left: 0.5em;
+  top: 0.5em;
+  width: 17%;
+  height: 98.2%;
+  gap: 1em;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+  transition: var(--transition);
+  z-index: 2;
+
+  .header {
+    width: 100%;
+    height: 3em;
+    border-radius: 0.5em 0.5em 0 0;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      margin-left: 0.2em;
+      font-size: 1.5em;
+      color: var(--grey);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: var(--transition);
+      border-radius: 8px;
+      padding: 0.2em;
+    }
+
+    .icon:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .titles {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      transition: var(--transition);
+      overflow: hidden;
+      justify-content: center;
+      position: relative;
+
+      .title {
+        font-weight: 500;
+        font-size: 1.2em;
+        margin-left: -2.6em;
+      }
+
+      .icon {
+        position: absolute;
+        right: 0.8em;
+        padding: 0.2em;
+        border-radius: 8px;
+      }
+    }
+  }
+
+  .list {
+    width: 93%;
+    height: calc(100% - 5.5em);
+    margin: 0 auto;
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    overflow: hidden;
+    overflow-y: auto;
+
+    h2 {
+      font-size: 1em;
+      font-weight: 600;
+      color: var(--grey);
+      margin: 0.5em;
+      margin-top: 1em;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .conversation {
+      width: 89%;
+      border-radius: 8px;
+      padding: 0.5em 1em;
+      padding-left: 0.5em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1em;
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+      user-select: none;
+      animation: fadeIn 0.2s ease-in-out;
+
+      span {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .icon {
+        color: var(--light-grey);
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+        transform: scale(1.1);
+      }
+
+      .icon:hover {
+        color: var(--grey2) !important;
+      }
+    }
+
+    .conversation:hover {
+      background-color: rgba(100, 100, 100, 0.1) !important;
+
+      .icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  .list::-webkit-scrollbar {
+    width: 0.5em;
+  }
+
+  .list::-webkit-scrollbar-thumb {
+    background-color: var(--light-grey);
+    border-radius: 8px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

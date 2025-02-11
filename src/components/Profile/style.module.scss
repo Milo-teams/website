@@ -1,0 +1,22 @@
+.Profile_container {
+  position: fixed;
+  top: 1em;
+  right: 2em;
+
+  .icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+
+    &:hover {
+      box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+  }
+}

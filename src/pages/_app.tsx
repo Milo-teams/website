@@ -1,0 +1,25 @@
+import { Provider } from 'react-redux';
+import store from '../tools/store';
+import "@/styles/globals.scss";
+import type { AppProps } from "next/app";
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+import io from 'socket.io-client';
+
+export const socket = io("http://localhost:8080", {
+  transports: ["websocket"],
+  autoConnect: true,
+  reconnection: true,
+  reconnectionAttempts: 10,
+  reconnectionDelay: 1000,
+});
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>
+  )
+}

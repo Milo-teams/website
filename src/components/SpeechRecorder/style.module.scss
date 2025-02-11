@@ -1,0 +1,122 @@
+.Speech_container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  position: relative;
+
+  .animation {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      opacity: 0;
+      position: absolute;
+      box-sizing: border-box;
+      border: 0.2em solid #7d7f92;
+      border-radius: 20em;
+      animation: animate 10s ease-out infinite;
+      animation-delay: calc(2s * var(--i));
+    }
+  }
+
+  .Speech_bubble {
+    width: 12em;
+    height: 12em;
+    background-color: #464646;
+    border-radius: 20em;
+    animation: pulse 2s infinite ease-in-out;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      width: 50%;
+      height: 50%;
+      background: linear-gradient(
+        -150deg,
+        #d7e7ff 20%,
+        #e1f5ff 80%,
+        #f0faff 100%
+      );
+      border: 1em solid #464646;
+      box-shadow: 0 0 0 0.5em white;
+      border-radius: 20em;
+    }
+  }
+
+  .buttons {
+    position: fixed;
+    bottom: 2em;
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    animation: popupin 0.5s ease-in-out;
+
+    button {
+      width: 5em;
+      height: 5em;
+      border: none;
+      border-radius: 50%;
+      background-clip: padding-box;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      outline: none;
+
+      &:hover {
+        filter: brightness(0.9);
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255);
+  }
+
+  50% {
+    transform: scale(1);
+    box-shadow: 0 0 0 30px rgba(255, 255, 255, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes animate {
+  from {
+    width: 0;
+    height: 0;
+    opacity: 0.8;
+  }
+  to {
+    width: 30em;
+    height: 30em;
+    opacity: 0;
+  }
+}
+
+@keyframes popupin {
+  0% {
+    transform: translateY(2em);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
