@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Conversations, InputBar, Profile, SpeechRecorder } from "@/components"
+import { Conversations, InputBar, Params, Profile, SpeechRecorder } from "@/components"
 import Message from "@/components/Message"
 import emitEvent from "@/tools/webSocketHandler"
 import { socket } from "./_app"
@@ -7,6 +7,7 @@ import router from "next/router"
 import Cookies from "universal-cookie"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons"
+import { useClickAway } from "react-use"
 
 interface ChannelProps {
   id: string
@@ -33,9 +34,11 @@ const Channel = ({
   } | null>(null);
   const [canScroll, setCanScroll] = useState<boolean>(false);
   const [isConversation, setIsConversation] = useState<boolean>(true);
+  const [params, setParams] = useState<{ id: string, x: number, y: number } | null>(null);
 
   const messageBufferRef = useRef<{ [id: string]: string }>({});
   const messageRef = useRef<HTMLDivElement>(null);
+  const paramsRef = useRef<HTMLDivElement>(null);
 
   const handleSend = (message: string) => {
     if (id) {
@@ -153,6 +156,10 @@ const Channel = ({
     }
   }
 
+  useClickAway(paramsRef, () => {
+    setParams(null);
+  });
+
   return (
     <main className="background">
       {isSpeaking ?
@@ -166,6 +173,8 @@ const Channel = ({
       :
         <>
           <Profile />
+
+          {params && <Params params={params} setParams={setParams} token={token} getConversations={() => emitEvent("getAllConversation", { token }, (data) => setConversations(data.data))} ref={paramsRef} />}
 
           <Conversations
             onConversationChange={handleConversationChange}
@@ -181,6 +190,7 @@ const Channel = ({
               setChats([]);
             }}
             setCanScroll={setCanScroll}
+            setParams={setParams}
           />
 
           {id &&

@@ -1,0 +1,35 @@
+.Params_container {
+  position: absolute;
+  left: 16.8%;
+  padding: 0 0.5em;
+  background-color: var(--white);
+  border-radius: 12px;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+  animation: fadeIn 0.3s ease-in-out forwards;
+
+  .Params_item {
+    margin: 0.5em 0;
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--grey2);
+    border-radius: calc(12px - 0.4em);
+  }
+
+  .Params_item:hover {
+    background-color: #eee;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
