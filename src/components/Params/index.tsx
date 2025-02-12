@@ -57,7 +57,7 @@ const Params = ({
     >
       {list.map((item, index) => (
         <div
-          key={index}
+          key={index + item.name}
           className={styles.Params_item}
           {...item.red && { style: { color: "var(--red)" } }}
           onClick={() => handleClick(item.value)}
