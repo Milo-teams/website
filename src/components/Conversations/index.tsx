@@ -163,7 +163,7 @@ const Conversations = ({
                       backgroundColor: conv._id === id ? 'rgba(100, 100, 100, 0.1)' : '',
                     }}
                   >
-                    <span onClick={() => onChange(conv._id)}>{conv.name}</span>
+                    <span title={conv.name} onClick={() => onChange(conv._id)}>{conv.name.slice(0, 1).toUpperCase() + conv.name.slice(1)}</span>
                     <div className={styles.icon} onClick={(e) => showParams(e, conv._id)}>
                       <FontAwesomeIcon icon={faEllipsis} size='1x' />
                     </div>
