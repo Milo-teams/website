@@ -20,6 +20,12 @@ interface ConversationsProps {
   id: string;
   onChange: (id: string) => void;
   setCanScroll: (canScroll: boolean) => void;
+  setParams: (id: {
+    id: string;
+    x: number;
+    y: number;
+    name: string;
+  } | null) => void;
 }
 
 const Conversations = ({
@@ -30,6 +36,7 @@ const Conversations = ({
   id,
   onChange,
   setCanScroll,
+  setParams,
 }: ConversationsProps) => {
   const groupConversations = useMemo(() => {
     const today = {
@@ -99,6 +106,15 @@ const Conversations = ({
     });
   }, [onConversationChange]);
 
+  const showParams = (e: React.MouseEvent<HTMLDivElement>, id: string, name: string) => {
+    setParams({
+      id,
+      x: e.clientX,
+      y: e.clientY - 2,
+      name,
+    });
+  };
+
   return (
     <div
       className={styles.Conversations_container}
@@ -122,18 +138,12 @@ const Conversations = ({
           />
         </div>
 
-        <div
-          className={styles.titles}
-            style={{
-              width: isConversation ? '100%' : '0',
-            }}
-        >
-          <div className={styles.title}>Conversations</div>
-
-          <div className={styles.icon} onClick={handleNewConversation}>
-            <FontAwesomeIcon icon={faPenToSquare} size='sm' color="var(--grey)" />
-          </div>
-        </div>
+          {isConversation && <>
+            <div className={styles.title}>Conversations</div>
+            <div className={styles.icon} onClick={handleNewConversation}>
+              <FontAwesomeIcon icon={faPenToSquare} size='sm' color="var(--grey)" />
+            </div>
+          </>}
       </div>
 
       <div className={styles.list}>
@@ -151,13 +161,12 @@ const Conversations = ({
                   <div
                     key={conv._id}
                     className={styles.conversation}
-                    onClick={() => onChange(conv._id)}
                     style={{
                       backgroundColor: conv._id === id ? 'rgba(100, 100, 100, 0.1)' : '',
                     }}
                   >
-                    <span>{conv.name}</span>
-                    <div className={styles.icon}>
+                    <span title={conv.name} onClick={() => onChange(conv._id)}>{conv.name.slice(0, 1).toUpperCase() + conv.name.slice(1)}</span>
+                    <div className={styles.icon} onClick={(e) => showParams(e, conv._id, conv.name)}>
                       <FontAwesomeIcon icon={faEllipsis} size='1x' />
                     </div>
                   </div>
