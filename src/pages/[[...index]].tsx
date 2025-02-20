@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Conversations, InputBar, Params, Profile, SpeechRecorder } from "@/components"
+import { Conversations, EditPopup, InputBar, Params, Profile, SpeechRecorder } from "@/components"
 import Message from "@/components/Message"
 import emitEvent from "@/tools/webSocketHandler"
 import { socket } from "./_app"
@@ -34,7 +34,8 @@ const Channel = ({
   } | null>(null);
   const [canScroll, setCanScroll] = useState<boolean>(false);
   const [isConversation, setIsConversation] = useState<boolean>(true);
-  const [params, setParams] = useState<{ id: string, x: number, y: number } | null>(null);
+  const [params, setParams] = useState<{ id: string, x: number, y: number, name: string } | null>(null);
+  const [editNameConv, setEditNameConv] = useState<{ id: string, name: string } | null>(null);
 
   const messageBufferRef = useRef<{ [id: string]: string }>({});
   const messageRef = useRef<HTMLDivElement>(null);
@@ -174,7 +175,17 @@ const Channel = ({
         <>
           <Profile />
 
-          {params && <Params params={params} setParams={setParams} token={token} getConversations={() => emitEvent("getAllConversation", { token }, (data) => setConversations(data.data))} ref={paramsRef} />}
+          {params &&
+            <Params
+              params={params}
+              setParams={setParams}
+              token={token}
+              getConversations={() => emitEvent("getAllConversation", { token }, (data) => setConversations(data.data))}
+              ref={paramsRef}
+              setEditNameConv={setEditNameConv}
+            />
+          }
+          {editNameConv && <EditPopup conv={editNameConv} setEditNameConv={setEditNameConv} token={token} setConversations={setConversations} convs={conversations} />}
 
           <Conversations
             onConversationChange={handleConversationChange}
@@ -277,7 +288,7 @@ export const getServerSideProps = async (ctx: any) => {
 
   return {
     props: {
-      id: index && index[1] || null,
+      id: index?.[1] || null,
       token,
       groqKey
     }

@@ -24,6 +24,7 @@ interface ConversationsProps {
     id: string;
     x: number;
     y: number;
+    name: string;
   } | null) => void;
 }
 
@@ -105,11 +106,12 @@ const Conversations = ({
     });
   }, [onConversationChange]);
 
-  const showParams = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
+  const showParams = (e: React.MouseEvent<HTMLDivElement>, id: string, name: string) => {
     setParams({
       id,
       x: e.clientX,
-      y: e.clientY - 2
+      y: e.clientY - 2,
+      name,
     });
   };
 
@@ -164,7 +166,7 @@ const Conversations = ({
                     }}
                   >
                     <span title={conv.name} onClick={() => onChange(conv._id)}>{conv.name.slice(0, 1).toUpperCase() + conv.name.slice(1)}</span>
-                    <div className={styles.icon} onClick={(e) => showParams(e, conv._id)}>
+                    <div className={styles.icon} onClick={(e) => showParams(e, conv._id, conv.name)}>
                       <FontAwesomeIcon icon={faEllipsis} size='1x' />
                     </div>
                   </div>

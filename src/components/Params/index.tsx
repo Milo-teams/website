@@ -11,15 +11,21 @@ interface ParamsProps {
     id: string
     x: number
     y: number
+    name: string
   }
   setParams: (params: {
     id: string
     x: number
     y: number
+    name: string
   } | null) => void
   token: string
   getConversations: () => void
   ref: any
+  setEditNameConv: (editNameConv: {
+    id: string
+    name: string
+  } | null) => void
 }
 
 const Params = ({
@@ -28,6 +34,7 @@ const Params = ({
   token,
   getConversations,
   ref,
+  setEditNameConv,
 }: ParamsProps) => {
   const list = [
     { name: "Edit", value: "edit", icon: faPen },
@@ -37,6 +44,8 @@ const Params = ({
   const handleClick = (value: string) => {
     switch (value) {
       case "edit":
+        setEditNameConv({ id: params.id, name: params.name });
+        setParams(null);
         break;
       case "delete":
         emitEvent("deleteConversation", { id: params.id, token }, () => {
