@@ -51,7 +51,7 @@ export default function Login() {
 
   useEffect(() => {
     router.replace("/login", undefined, { shallow: true });
-    setIsOAuthSignIn(localStorage.getItem("isOAuthSignIn") as string | null);
+    setIsOAuthSignIn(localStorage.getItem("isOAuthSignIn"));
   }, []);
 
   const handleOAuthSignIn = (type: "google" | "azure-ad" | "github") => {
