@@ -1,7 +1,6 @@
-import { Provider } from 'react-redux';
-import store from '../tools/store';
 import "@/styles/globals.scss";
 import type { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react"
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -14,12 +13,15 @@ export const socket = io("http://localhost:8080", {
   reconnection: true,
   reconnectionAttempts: 10,
   reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  randomizationFactor: 0.5,
+  timeout: 20000,
 });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <Provider store={store}>
+    <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
