@@ -5,13 +5,14 @@ import router from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
-import { GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
+import { GithubLoginButton, GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isValide, setIsValide] = useState(false);
   const [loginType, setLoginType] = useState<"signin" | "signup">("signin");
+  const [isOAuthSignIn, setIsOAuthSignIn] = useState<string | null>(null);
   const { data: session } = useSession() as any;
 
   const cookies = new Cookies();
@@ -41,6 +42,7 @@ export default function Login() {
     if (!session) return;
     emitEvent("userLoginAuth", { username: session.user?.name, email: session.user?.email, image: session.user?.image, authToken: session.accessToken }, (data: { status: string, token: string }) => {
       if (data.status === "success") {
+        localStorage.removeItem("isOAuthSignIn");
         cookies.set("token", data.token, { path: "/" });
         router.push("/");
       }
@@ -49,7 +51,13 @@ export default function Login() {
 
   useEffect(() => {
     router.replace("/login", undefined, { shallow: true });
+    setIsOAuthSignIn(localStorage.getItem("isOAuthSignIn") as string | null);
   }, []);
+
+  const handleOAuthSignIn = (type: "google" | "azure-ad" | "github") => {
+    localStorage.setItem("isOAuthSignIn", type);
+    signIn(type);
+  };
 
   return (
     <>
@@ -61,6 +69,7 @@ export default function Login() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="contentLogin">
+        {isOAuthSignIn && <div className="loading_oauth"><span>Please wait while we sign you in with {isOAuthSignIn}...</span></div>}
         <div className="header">
           <div className="logo">
             <Image src="/favicon.ico" alt="Milo" width={160} height={160} />
@@ -104,11 +113,15 @@ export default function Login() {
           <GoogleLoginButton style={{
             borderRadius: "8px",
             transition: "var(--transition)",
-          }} onClick={() => signIn("google")} />
+          }} onClick={() => handleOAuthSignIn("google")} />
           <MicrosoftLoginButton style={{
             borderRadius: "8px",
             transition: "var(--transition)",
-          }} onClick={() => signIn("azure-ad")} />
+          }} onClick={() => handleOAuthSignIn("azure-ad")} />
+          <GithubLoginButton style={{
+            borderRadius: "8px",
+            transition: "var(--transition)",
+          }} onClick={() => handleOAuthSignIn("github")} />
         </div>
       </main>
     </>

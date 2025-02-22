@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
+import jwt from "jsonwebtoken";
 import GoogleProvider from "next-auth/providers/google";
 import AzureADProvider from "next-auth/providers/azure-ad";
+import GitHubProvider from "next-auth/providers/github";
 
 export const authOptions = {
   providers: [
@@ -29,6 +31,11 @@ export const authOptions = {
         },
       },
     }),
+    // Github OAuth provider
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID ?? "",
+      clientSecret: process.env.GITHUB_SECRET ?? "",
+    }),
   ],
   csrf: true,
   callbacks: {
@@ -37,7 +44,7 @@ export const authOptions = {
         token.id = profile.sub;
         token.name = profile.name;
         token.email = profile.email;
-        token.image = profile.picture;
+        token.image = profile.picture ?? profile.avatar_url;
         token.accessToken = account.id_token;
       }
       return token;
@@ -46,7 +53,15 @@ export const authOptions = {
       if (session.user) {
         session.user.id = token.id;
         session.user.image = token.image;
-        session.accessToken = token.accessToken;
+        session.accessToken =
+          token.accessToken ??
+          jwt.sign(
+            {
+              ...token,
+              iss: process.env.JWT_ISSUER,
+            },
+            process.env.JWT_SECRET
+          );
       }
       return session;
     },

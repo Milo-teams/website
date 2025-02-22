@@ -120,6 +120,30 @@ body {
     background-color: var(--black);
     color: var(--white);
 
+    .loading_oauth {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      cursor: wait;
+
+      span {
+        font-size: 1.5em;
+        font-weight: 800;
+        font-style: italic;
+        color: var(--white);
+        background-color: var(--cyan);
+        padding: 0.5em 1em;
+        border-radius: 12px;
+        box-shadow: 0 0 20px 0 var(--cyan);
+        user-select: none;
+      }
+    }
+
     .header {
       width: 100%;
       display: flex;
