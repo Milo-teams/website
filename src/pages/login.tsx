@@ -4,12 +4,16 @@ import Cookies from "universal-cookie";
 import router from "next/router";
 import Head from "next/head";
 import Image from "next/image";
+import { signIn, useSession } from "next-auth/react";
+import { GithubLoginButton, GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isValide, setIsValide] = useState(false);
   const [loginType, setLoginType] = useState<"signin" | "signup">("signin");
+  const [isOAuthSignIn, setIsOAuthSignIn] = useState<string | null>(null);
+  const { data: session } = useSession() as any;
 
   const cookies = new Cookies();
   const token = cookies.get("token");
@@ -34,6 +38,27 @@ export default function Login() {
     });
   };
 
+  useEffect(() => {
+    if (!session) return;
+    emitEvent("userLoginAuth", { username: session.user?.name, email: session.user?.email, image: session.user?.image, authToken: session.accessToken }, (data: { status: string, token: string }) => {
+      if (data.status === "success") {
+        localStorage.removeItem("isOAuthSignIn");
+        cookies.set("token", data.token, { path: "/" });
+        router.push("/");
+      }
+    });
+  }, [session]);
+
+  useEffect(() => {
+    router.replace("/login", undefined, { shallow: true });
+    setIsOAuthSignIn(localStorage.getItem("isOAuthSignIn"));
+  }, []);
+
+  const handleOAuthSignIn = (type: "google" | "azure-ad" | "github") => {
+    localStorage.setItem("isOAuthSignIn", type);
+    signIn(type);
+  };
+
   return (
     <>
       <Head>
@@ -44,6 +69,7 @@ export default function Login() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="contentLogin">
+        {isOAuthSignIn && <div className="loading_oauth"><span>Please wait while we sign you in with {isOAuthSignIn}...</span></div>}
         <div className="header">
           <div className="logo">
             <Image src="/favicon.ico" alt="Milo" width={160} height={160} />
@@ -59,18 +85,18 @@ export default function Login() {
         <div className="loginBox">
           <form id="loginForm">
             <div className="inputBox">
-              <label form="loginForm">Username <span>*</span></label>
-              <input type="text" name="username" required onChange={(e) => setUsername(e.target.value)} />
+              <label htmlFor="username">Username <span>*</span></label>
+              <input type="text" id="username" name="username" required onChange={(e) => setUsername(e.target.value)} />
             </div>
 
             <div className="inputBox">
-              <label form="loginForm">Password <span>*</span></label>
+              <label htmlFor="password">Password <span>*</span></label>
               <input type="password" name="password" required onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSubmit()} />
             </div>
 
             <div className="inputBox">
               <input type="button" value={loginType === "signin" ? "Sign in" : "Sign up"} style={{
-                backgroundColor: isValide ? "var(--green)" : "var(--white-dark)",
+                backgroundColor: isValide ? "var(--green)" : "#ccc",
                 cursor: isValide ? "pointer" : "not-allowed"
               }} disabled={!isValide} onClick={handleSubmit} />
             </div>
@@ -81,6 +107,21 @@ export default function Login() {
               <button onClick={() => setLoginType(loginType === "signin" ? "signup" : "signin")}>{loginType === "signin" ? "Sign up" : "Sign in"}</button>
             </p>
           </div>
+        </div>
+
+        <div className="socialLogin">
+          <GoogleLoginButton style={{
+            borderRadius: "8px",
+            transition: "var(--transition)",
+          }} onClick={() => handleOAuthSignIn("google")} />
+          <MicrosoftLoginButton style={{
+            borderRadius: "8px",
+            transition: "var(--transition)",
+          }} onClick={() => handleOAuthSignIn("azure-ad")} />
+          <GithubLoginButton style={{
+            borderRadius: "8px",
+            transition: "var(--transition)",
+          }} onClick={() => handleOAuthSignIn("github")} />
         </div>
       </main>
     </>

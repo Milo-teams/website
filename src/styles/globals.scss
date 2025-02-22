@@ -1,6 +1,6 @@
 :root {
   --white: #fff;
-  --white-dark: #ccc;
+  --white-dark: #eee;
   --black: #131313;
   --grey: #2e333d;
   --grey2: #464646;
@@ -119,6 +119,30 @@ body {
     align-items: center;
     background-color: var(--black);
     color: var(--white);
+
+    .loading_oauth {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      cursor: wait;
+
+      span {
+        font-size: 1.5em;
+        font-weight: 800;
+        font-style: italic;
+        color: var(--white);
+        background-color: var(--cyan);
+        padding: 0.5em 1em;
+        border-radius: 12px;
+        box-shadow: 0 0 20px 0 var(--cyan);
+        user-select: none;
+      }
+    }
 
     .header {
       width: 100%;
@@ -252,47 +276,6 @@ body {
             }
           }
         }
-
-        .secondLoginPart {
-          animation: fadeIn 0.3s ease-in-out forwards;
-
-          .title {
-            text-align: center;
-            margin: 0;
-          }
-
-          .inputCode {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 1em;
-            margin: 1em 0;
-
-            input[type="number"] {
-              width: 5%;
-              margin: 0.5em 0;
-              padding: 0.9em 1em;
-              border: none;
-              border-radius: 8px;
-              background-color: var(--grey);
-              color: var(--white);
-              font-size: 1.2em;
-              text-align: center;
-              overflow: hidden;
-
-              &:focus {
-                outline: none;
-                box-shadow: 0 0 0 2px var(--cyan);
-              }
-            }
-
-            input[type="number"]::-webkit-inner-spin-button,
-            input[type="number"]::-webkit-outer-spin-button {
-              -webkit-appearance: none;
-              margin: 0;
-            }
-          }
-        }
       }
 
       .register {
@@ -317,6 +300,12 @@ body {
           box-shadow: none;
         }
       }
+    }
+
+    .socialLogin {
+      margin-top: 1em;
+      display: flex;
+      flex-direction: column;
     }
   }
 }
