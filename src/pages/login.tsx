@@ -50,7 +50,6 @@ export default function Login() {
   }, [session]);
 
   useEffect(() => {
-    router.replace("/login", undefined, { shallow: true });
     setIsOAuthSignIn(localStorage.getItem("isOAuthSignIn"));
     if (localStorage.getItem("isOAuthSignIn")) {
       setTimeout(() => {
@@ -58,6 +57,13 @@ export default function Login() {
         setIsOAuthSignIn(null);
         window.location.reload();
       }, 5000);
+    }
+    if (window.location.search.includes("error=Callback")) {
+      localStorage.removeItem("isOAuthSignIn");
+      setIsOAuthSignIn(null);
+      router.replace("/login", undefined, { shallow: true });
+    } else {
+      router.replace("/login", undefined, { shallow: true });
     }
   }, []);
 
