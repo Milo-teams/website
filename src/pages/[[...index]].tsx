@@ -125,6 +125,8 @@ const Channel = ({
   }
 
   useEffect(() => {
+    setIsConversation(localStorage.getItem("convOpen") === "true");
+
     emitEvent("getAllConversation", { token }, (data) => setConversations(data.data));
 
     if (!id || id === "") return;
@@ -157,6 +159,10 @@ const Channel = ({
     }
   }
 
+  useEffect(() => {
+    localStorage.setItem("convOpen", isConversation.toString());
+  }, [isConversation])
+
   useClickAway(paramsRef, () => {
     setParams(null);
   });
@@ -180,7 +186,6 @@ const Channel = ({
               params={params}
               setParams={setParams}
               token={token}
-              getConversations={() => emitEvent("getAllConversation", { token }, (data) => setConversations(data.data))}
               ref={paramsRef}
               setEditNameConv={setEditNameConv}
             />

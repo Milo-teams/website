@@ -91,7 +91,7 @@ const VoiceRecorder = ({
 
   const initializeHark = (stream: MediaStream) => {
     const harkInstance = Hark(stream, {
-      interval: 100,
+      interval: 25,
       threshold: -65,
       play: false,
     });

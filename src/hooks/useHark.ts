@@ -7,7 +7,7 @@ const useHark = (stream: MediaStream | null) => {
   useEffect(() => {
     if (!stream) return;
 
-    const speechEvents = hark(stream, { threshold: -65, interval: 100 });
+    const speechEvents = hark(stream, { threshold: -65, interval: 25 });
 
     speechEvents.on("speaking", () => setIsSpeaking(true));
     speechEvents.on("stopped_speaking", () => setIsSpeaking(false));

@@ -20,7 +20,6 @@ interface ParamsProps {
     name: string
   } | null) => void
   token: string
-  getConversations: () => void
   ref: any
   setEditNameConv: (editNameConv: {
     id: string
@@ -32,7 +31,6 @@ const Params = ({
   params,
   setParams,
   token,
-  getConversations,
   ref,
   setEditNameConv,
 }: ParamsProps) => {
@@ -50,8 +48,7 @@ const Params = ({
       case "delete":
         emitEvent("deleteConversation", { id: params.id, token }, () => {
           setParams(null);
-          getConversations();
-          router.push("/");
+          router.reload();
         });
     }
   }
