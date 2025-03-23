@@ -1,77 +1,47 @@
-import React from 'react';
-import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import emitEvent from '@/tools/webSocketHandler';
-import router from 'next/router';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useClickAway } from 'react-use';
 
 import styles from './style.module.scss';
 
 interface ParamsProps {
-  params: {
-    id: string
-    x: number
-    y: number
-    name: string
-  }
-  setParams: (params: {
-    id: string
-    x: number
-    y: number
-    name: string
-  } | null) => void
-  token: string
-  ref: any
-  setEditNameConv: (editNameConv: {
-    id: string
-    name: string
-  } | null) => void
+
 }
 
-const Params = ({
-  params,
-  setParams,
-  token,
-  ref,
-  setEditNameConv,
-}: ParamsProps) => {
-  const list = [
-    { name: "Edit", value: "edit", icon: faPen },
-    { name: "Delete", value: "delete", icon: faTrash, red: true },
-  ];
+const Params = ({ }: ParamsProps) => {
+  const router = useRouter();
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
-  const handleClick = (value: string) => {
-    switch (value) {
-      case "edit":
-        setEditNameConv({ id: params.id, name: params.name });
-        setParams(null);
-        break;
-      case "delete":
-        emitEvent("deleteConversation", { id: params.id, token }, () => {
-          setParams(null);
-          router.reload();
-        });
-    }
-  }
+  const ref = useRef<HTMLDivElement>(null);
+
+  useClickAway(ref, () => {
+    router.push(router.asPath.replace('#params', ''));
+  });
+
+  useEffect(() => {
+    setIsVisible(router.asPath.includes('#params'));
+  }, [router]);
+
+  if (!isVisible) return null
 
   return (
-    <div
-      className={styles.Params_container}
-      style={{
-        top: params.y - 18,
-      }}
-      ref={ref}
-    >
-      {list.map((item, index) => (
-        <div
-          key={index + item.name}
-          className={styles.Params_item}
-          {...item.red && { style: { color: "var(--red)" } }}
-          onClick={() => handleClick(item.value)}
-        >
-          <FontAwesomeIcon icon={item.icon} />
-          <span>{item.name}</span>
+    <div className={styles.Params_container}>
+      <div ref={ref} className={styles.content}>
+        <div className={styles.header}>
+          <h1>Parameters</h1>
+          <button
+            className={styles.close}
+            onClick={() => {
+              router.push(router.asPath.replace('#params', ''));
+              setIsVisible(false);
+            }}
+          >
+            <FontAwesomeIcon icon={faTimes} size="lg" />
+          </button>
         </div>
-      ))}
+      </div>
     </div>
   );
 };

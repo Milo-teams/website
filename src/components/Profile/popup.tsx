@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { signOut } from 'next-auth/react';
 import Cookies from "universal-cookie";
+import { useRouter } from 'next/router';
 
 import styles from './style.module.scss';
 
@@ -13,6 +14,8 @@ interface PopupProps {
 const Popup = ({
   ref,
 }: PopupProps) => {
+  const router = useRouter();
+
   const cookies = new Cookies();
   const handleSignOut = async () => {
     signOut().then(() => {
@@ -22,8 +25,12 @@ const Popup = ({
     });
   }
 
+  const handleShowSettings = () => {
+    router.push('#params');
+  }
+
   const options = [
-    { name: 'Settings', icon: faCog, action: () => console.log('Settings') },
+    { name: 'Settings', icon: faCog, action: handleShowSettings },
     { name: 'Logout', icon: faSignOutAlt, action: handleSignOut },
   ];
 

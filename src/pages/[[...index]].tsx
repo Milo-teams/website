@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Conversations, EditPopup, InputBar, Params, Profile, SpeechRecorder } from "@/components"
+import { Conversations, EditPopup, InputBar, Menu, Params, Profile, SpeechRecorder } from "@/components"
 import Message from "@/components/Message"
 import emitEvent from "@/tools/webSocketHandler"
 import { socket } from "./_app"
@@ -169,6 +169,8 @@ const Channel = ({
 
   return (
     <main className="background">
+      <Params />
+
       {isSpeaking ?
         <SpeechRecorder
           token={token}
@@ -182,7 +184,7 @@ const Channel = ({
           <Profile />
 
           {params &&
-            <Params
+            <Menu
               params={params}
               setParams={setParams}
               token={token}
